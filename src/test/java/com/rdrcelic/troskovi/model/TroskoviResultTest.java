@@ -14,7 +14,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+/***
+ * Test makes sure that various use cases on TroskoviResult are going to have expected JSON structure.
+ * [{"key":[{"field":"value"}, {"field":"value"}]}]
+ */
 public class TroskoviResultTest {
 
     private ObjectMapper objectMapper;
@@ -23,6 +26,7 @@ public class TroskoviResultTest {
     }
 
     private EnhancedRandom enhancedRandom;
+
     @Before
     public void setup() {
         enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
