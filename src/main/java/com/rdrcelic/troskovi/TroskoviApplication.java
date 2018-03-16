@@ -1,4 +1,4 @@
-package com.rdrce.troskovi;
+package com.rdrcelic.troskovi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

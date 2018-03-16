@@ -1,4 +1,4 @@
-package com.rdrce.troskovi;
+package com.rdrcelic.troskovi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
