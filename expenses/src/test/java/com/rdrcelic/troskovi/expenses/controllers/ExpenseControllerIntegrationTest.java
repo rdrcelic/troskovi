@@ -40,9 +40,6 @@ public class ExpenseControllerIntegrationTest {
     private EnhancedRandom enhancedRandom;
     private ExpenseDto testExpenseDto;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Before
     public void setup() {
         enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
@@ -59,15 +56,5 @@ public class ExpenseControllerIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().get(0).get("expenses")).isOfAnyClassIn(List.class, ArrayList.class);
         assertThat((List)response.getBody().get(0).get("expenses")).hasSize(1);
-
-        // TODO: extract this part to some utility
-        List<ExpenseDto> expenseDtoList = objectMapper.convertValue(
-                (List)response.getBody().get(0).get("expenses"),
-                new TypeReference<List<ExpenseDto>>() {});
-
-
-        assertThat(expenseDtoList.get(0).getAmount().setScale(10, BigDecimal.ROUND_DOWN))
-                .isEqualTo(testExpenseDto.getAmount().setScale(10, BigDecimal.ROUND_DOWN));
-        assertThat(expenseDtoList.get(0).getExpenseDescription()).isEqualTo(testExpenseDto.getExpenseDescription());
     }
 }
