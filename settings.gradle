@@ -1,0 +1,5 @@
+rootProject.name = 'troskovi'
+
+include 'expenses-model'
+include 'expenses'
+
