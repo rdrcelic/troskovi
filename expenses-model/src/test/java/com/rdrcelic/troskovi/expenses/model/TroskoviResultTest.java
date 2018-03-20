@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class TroskoviResultTest {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     {
         objectMapper = new ObjectMapper();
     }
@@ -57,4 +57,6 @@ public class TroskoviResultTest {
         assertThat(jsonContext).isNotNull();
         assertThat((List)jsonContext.read("$[0].expenses")).isNotEmpty();
     }
+
+
 }

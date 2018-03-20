@@ -18,10 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ResultConverterTest {
 
     private EnhancedRandom enhancedRandom;
-    private ResultConverter resultConverter;
-    private ObjectMapper objectMapper;
+    private final ResultConverter resultConverter;
     {
-        objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         resultConverter = new ResultConverter(objectMapper);
     }
 
@@ -41,7 +40,7 @@ public class ResultConverterTest {
         expenseDtos = resultConverter.convertValue(expensesResult, valueKey, expenseDtos);
         // then
         assertThat(expenseDtos).hasSize(1);
-        assertThat(expenseDtos.get(0).getExpenseDescription()).isEqualTo(testExpenseDto.getExpenseDescription());
+        assertThat(expenseDtos.get(0).getDescription()).isEqualTo(testExpenseDto.getDescription());
         assertThat(expenseDtos.get(0).getAmount().setScale(10, BigDecimal.ROUND_DOWN))
                 .isEqualTo(testExpenseDto.getAmount().setScale(10, BigDecimal.ROUND_DOWN));
     }

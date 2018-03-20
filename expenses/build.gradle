@@ -18,9 +18,12 @@ repositories {
 }
 
 dependencies {
+    compile project (':troskovi-common')
     compile project (':expenses-model')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.modelmapper:modelmapper:1.1.0')
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-starter-contract-verifier')
 }

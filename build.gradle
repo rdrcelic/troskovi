@@ -9,6 +9,7 @@ allprojects {
     targetCompatibility = 1.8
 
     dependencies {
+        compile 'org.codehaus.groovy:groovy-all:+' // for the sake of gradle test (?)
         compileOnly('org.projectlombok:lombok:1.16.20')
         testCompile('io.github.benas:random-beans:3.7.0')
     }

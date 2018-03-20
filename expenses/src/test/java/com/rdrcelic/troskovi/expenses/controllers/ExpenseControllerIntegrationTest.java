@@ -1,16 +1,16 @@
 package com.rdrcelic.troskovi.expenses.controllers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
 import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +29,10 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ExpenseControllerIntegrationTest {
+    // TODO: when this becomes real integration test, no need for this and Mockito usage
+    // initialize mocks properly and enable automatic Mockito framework validation - do the same as @RunWith(MockitoJUnitRunner.class)
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -37,12 +40,11 @@ public class ExpenseControllerIntegrationTest {
     @MockBean
     private ExpensesDao mockExpenseDao; // TODO: when persistency implemented this mock should disappear
 
-    private EnhancedRandom enhancedRandom;
     private ExpenseDto testExpenseDto;
 
     @Before
     public void setup() {
-        enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
         testExpenseDto = enhancedRandom.nextObject(ExpenseDto.class);
     }
 

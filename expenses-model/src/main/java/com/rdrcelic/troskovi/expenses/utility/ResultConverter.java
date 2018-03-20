@@ -12,18 +12,15 @@ import java.util.List;
  */
 public class ResultConverter {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public ResultConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public <T> T convertValue (TroskoviResult container, String valueKey, T valueType) {
-        T value = objectMapper.convertValue(
-                (List)container.get(0).get(valueKey),
+        return objectMapper.convertValue(
+                container.get(0).get(valueKey),
                 new TypeReference<List<ExpenseDto>>() {});
-
-        return value;
     }
-
 }
