@@ -1,8 +1,10 @@
 package com.rdrcelic.troskovi.expenses.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
 import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
+import com.rdrcelic.troskovi.expenses.utility.ResultConverter;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.Before;
@@ -15,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +34,10 @@ public class ExpenseControllerIntegrationTest {
     @Autowired
     private ExpensesDao expensesDao;
 
+    private ResultConverter resultConverter;
+    {
+        resultConverter = new ResultConverter(new ObjectMapper());
+    }
     private ExpenseDto testExpenseDto;
 
     @Before
@@ -47,6 +55,20 @@ public class ExpenseControllerIntegrationTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().get(0).get("expenses")).isOfAnyClassIn(List.class, ArrayList.class);
-        assertThat((List)response.getBody().get(0).get("expenses")).hasSize(1);
+        assertThat((List)response.getBody().get(0).get("expenses")).isNotEmpty();
+    }
+
+    @Test
+    public void createExpense() throws Exception {
+        // given
+        ExpenseDto newExpense = new ExpenseDto("Hrana", new BigDecimal("7.40"));
+        // when
+        ResponseEntity<TroskoviResult> response = restTemplate.postForEntity("/expenses", newExpense, TroskoviResult.class);
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody().get(0).get("newExpense")).isInstanceOf(LinkedHashMap.class);
+        ExpenseDto expenseDto = resultConverter.convertToExpenseDto(response.getBody(), "newExpense");
+        assertThat(expenseDto.getDescription()).isEqualTo("Hrana");
+        assertThat(expenseDto.getAmount()).isEqualTo(new BigDecimal("7.40"));
     }
 }

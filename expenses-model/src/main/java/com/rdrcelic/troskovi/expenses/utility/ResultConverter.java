@@ -18,9 +18,14 @@ public class ResultConverter {
         this.objectMapper = objectMapper;
     }
 
-    public <T> T convertValue (TroskoviResult container, String valueKey, T valueType) {
+    public List<ExpenseDto> convertToListOfDtos(TroskoviResult container, String valueKey) {
         return objectMapper.convertValue(
                 container.get(0).get(valueKey),
                 new TypeReference<List<ExpenseDto>>() {});
+    }
+
+    public ExpenseDto convertToExpenseDto(TroskoviResult container, String valueKey) {
+        return objectMapper.convertValue(container.get(0).get(valueKey),
+                new TypeReference<ExpenseDto>(){});
     }
 }
