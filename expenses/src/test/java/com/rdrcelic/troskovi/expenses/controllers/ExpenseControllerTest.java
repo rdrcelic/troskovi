@@ -74,8 +74,7 @@ public class ExpenseControllerTest {
     @Test
     public void createNewExpenseOK() throws Exception {
         // given
-        ExpenseEntity newExpense = enhancedRandom.nextObject(ExpenseEntity.class);
-        newExpense.setActive(true);
+        ExpenseEntity newExpense = enhancedRandom.nextObject(ExpenseEntity.class, "active");
         when(expensesDao.createExpense(any(ExpenseDto.class))).thenReturn(newExpense);
         MockHttpServletRequestBuilder builder =
                 MockMvcRequestBuilders.post("/expenses")
@@ -123,7 +122,7 @@ public class ExpenseControllerTest {
     @Test
     public void modifyExpenseNOK() throws Exception {
         // given
-        doThrow(new NoSuchExpense(101,"Expense with given id doesn't exist"))
+        doThrow(new NoSuchExpense(101))
                 .when(expensesDao).patchExpense(anyLong(), any(ExpenseDto.class));
         MockHttpServletRequestBuilder builder =
                 MockMvcRequestBuilders.patch("/expenses/101")

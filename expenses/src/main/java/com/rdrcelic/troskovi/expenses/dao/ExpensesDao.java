@@ -4,12 +4,16 @@ import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import com.rdrcelic.troskovi.expenses.exceptions.ExpenseConflictExeption;
 import com.rdrcelic.troskovi.expenses.exceptions.NoSuchExpense;
+import com.rdrcelic.troskovi.expenses.repository.ExpensesRepository;
+import com.rdrcelic.troskovi.expenses.utility.ModelMapperFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * This is data access object to manage Expense entities.
@@ -18,22 +22,37 @@ import java.util.Optional;
 @Component
 public class ExpensesDao {
 
+    private final ExpensesRepository expensesRepository;
+    private final ModelMapper modelMapper = ModelMapperFactory.createModelMapperSkippingNullProperties();
+
+    public ExpensesDao(ExpensesRepository expensesRepository) {
+        this.expensesRepository = expensesRepository;
+    }
+
     public List<ExpenseDto> getAllExpenses() {
-        return new ArrayList<>();
+        Optional<List<ExpenseEntity>> optionalList = Optional.of((List<ExpenseEntity>) expensesRepository.findAll());
+        List<ExpenseEntity> expenseEntityList = optionalList.orElse(new ArrayList<>());
+        return expenseEntityList
+                .stream()
+                .map(expenseEntity -> modelMapper.map(expenseEntity, ExpenseDto.class))
+                .collect(Collectors.toList());
     }
 
     public ExpenseEntity createExpense(ExpenseDto newExpenseDto) throws ExpenseConflictExeption {
-        return new ExpenseEntity();
+        //TODO: validate newExpenseDto
+        ExpenseEntity newExpenseEntity = modelMapper.map(newExpenseDto, ExpenseEntity.class);
+        return expensesRepository.save(newExpenseEntity);
     }
 
     public ExpenseEntity getExpense(long id) throws NoSuchExpense {
-        return new ExpenseEntity();
+        Optional<ExpenseEntity> expenseEntity = expensesRepository.findById(id);
+        return expenseEntity.orElseThrow(() -> new NoSuchExpense(id));
     }
 
     public void patchExpense(long id, ExpenseDto expenseDto) throws InvalidParameterException {
         ExpenseEntity expenseToChange = this.getExpense(id);
-
         // validate expenseEssentialsOnly and determine which parameter is invalid - validatation throws InvalidParameterException exception
-
+        modelMapper.map(expenseDto, expenseToChange);
+        expensesRepository.save(expenseToChange);
     }
 }
