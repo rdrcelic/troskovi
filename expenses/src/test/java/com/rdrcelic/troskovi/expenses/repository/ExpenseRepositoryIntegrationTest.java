@@ -14,6 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * This is component integration test for ExpenseRepository
+ */
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class ExpenseRepositoryIntegrationTest {

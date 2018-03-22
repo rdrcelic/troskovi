@@ -3,6 +3,7 @@ package com.rdrcelic.troskovi.expenses.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
 import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
+import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
 import com.rdrcelic.troskovi.expenses.utility.ResultConverter;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
@@ -13,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -70,5 +73,21 @@ public class ExpenseControllerIntegrationTest {
         ExpenseDto expenseDto = resultConverter.convertToExpenseDto(response.getBody(), "newExpense");
         assertThat(expenseDto.getDescription()).isEqualTo("Hrana");
         assertThat(expenseDto.getAmount()).isEqualTo(new BigDecimal("7.40"));
+    }
+
+    @Test
+    public void deactivateExpense() throws Exception {
+        // given
+        ExpenseEntity sampleExpense = expensesDao.createExpense(testExpenseDto);
+        ExpenseDto expenseChangePayload = new ExpenseDto();
+        expenseChangePayload.setActive(false);
+        String pathToExpenseResource = String.format("/expenses/%d", sampleExpense.getId());
+
+        // when
+        ResponseEntity<?> response = restTemplate.exchange(pathToExpenseResource, HttpMethod.PATCH, new HttpEntity<ExpenseDto>(expenseChangePayload), ResponseEntity.class);
+        sampleExpense = expensesDao.getExpense(sampleExpense.getId());
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(sampleExpense.getActive()).isFalse();
     }
 }
