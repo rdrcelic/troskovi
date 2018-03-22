@@ -5,6 +5,7 @@ import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.assertj.core.api.Condition;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,17 @@ public class ExpenseRepositoryIntegrationTest {
     private ExpensesRepository expensesRepository;
 
     private EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
+    private ExpenseEntity randomEntity;
 
     @After
     public void cleaup() {
-        expensesRepository.deleteAll();
+        entityManager.clear();
+    }
+
+    @Before
+    public void setup() {
+        randomEntity = enhancedRandom.nextObject(ExpenseEntity.class);
+        randomEntity.setId(null); // has to be done to avoid "org.hibernate.PersistentObjectException: detached entity passed to persist"
     }
 
     @Test
@@ -40,8 +48,9 @@ public class ExpenseRepositoryIntegrationTest {
         ExpenseEntity newExpenseEntity = enhancedRandom.nextObject(ExpenseEntity.class);
         newExpenseEntity.setId(-1L);
         // when
-        ExpenseEntity expenseEntitySaved = expensesRepository.save(newExpenseEntity);
-        // then
+        Long newId = expensesRepository.save(newExpenseEntity).getId();
+        ExpenseEntity expenseEntitySaved = entityManager.find(ExpenseEntity.class, newId);
+                // then
         assertThat(expenseEntitySaved).isNotNull();
         assertThat(expenseEntitySaved.getId()).is(new Condition<Long>(id -> id > 0, "Id has to be greater than 0"));
     }
@@ -49,7 +58,7 @@ public class ExpenseRepositoryIntegrationTest {
     @Test
     public void getExpenseByIdOK() {
         // given
-        ExpenseEntity expenseEntitySaved = expensesRepository.save(enhancedRandom.nextObject(ExpenseEntity.class));
+        ExpenseEntity expenseEntitySaved = entityManager.persist(randomEntity);
         // when
         ExpenseEntity requestedEntity = expensesRepository.findById(expenseEntitySaved.getId()).orElse(null);
         // then
@@ -60,7 +69,7 @@ public class ExpenseRepositoryIntegrationTest {
     @Test
     public void getExpenseByIdNOK() {
         // given
-        ExpenseEntity expenseEntitySaved = expensesRepository.save(enhancedRandom.nextObject(ExpenseEntity.class));
+        ExpenseEntity expenseEntitySaved = entityManager.persist(randomEntity);
         // when
         ExpenseEntity requestedExpenseEntity = expensesRepository.findById(expenseEntitySaved.getId() + 1L).orElse(null);
         // then
@@ -70,8 +79,10 @@ public class ExpenseRepositoryIntegrationTest {
     @Test
     public void getAllExpenses() {
         // given
-        expensesRepository.save(enhancedRandom.nextObject(ExpenseEntity.class));
-        expensesRepository.save(enhancedRandom.nextObject(ExpenseEntity.class));
+        ExpenseEntity secondRandomExpense = enhancedRandom.nextObject(ExpenseEntity.class);
+        secondRandomExpense.setId(null);
+        entityManager.persist(randomEntity);
+        entityManager.persist(secondRandomExpense);
         // when
         Iterable<ExpenseEntity> allExpenses = expensesRepository.findAll();
         // then
@@ -81,7 +92,7 @@ public class ExpenseRepositoryIntegrationTest {
     @Test
     public void updateExpense() {
         // given
-        ExpenseEntity expenseEntity = expensesRepository.save(enhancedRandom.nextObject(ExpenseEntity.class));
+        ExpenseEntity expenseEntity = entityManager.persist(randomEntity);
         // when
         boolean patchedValue = !expenseEntity.getActive();
         expenseEntity.setActive(patchedValue);
@@ -89,5 +100,4 @@ public class ExpenseRepositoryIntegrationTest {
         // then
         assertThat(updatedExpenseEntity.getActive()).isEqualTo(patchedValue);
     }
-
 }
