@@ -1,3 +1,11 @@
+#debug: true
+#trace: true
+
+logging:
+  level:
+    com.rdrcelic.troskovi.expenses: DEBUG
+
+
 spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
