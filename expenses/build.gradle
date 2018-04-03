@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.unbroken-dome.test-sets' version '1.4.4'
+}
+
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -26,10 +30,13 @@ dependencies {
     compile('org.modelmapper:modelmapper:1.1.0')
     compile('mysql:mysql-connector-java')
     compile('org.liquibase:liquibase-core')
+    compile('io.vavr:vavr:0.9.0')
 
+    // testing
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-starter-contract-verifier')
     testCompile('com.h2database:h2')
+    compile ('org.testcontainers:mssqlserver:1.4.3')
 }
 
 ext {
@@ -39,5 +46,24 @@ ext {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+// integration testing
+testSets {
+    integrationTest
+}
+
+//check.dependsOn integrationTest
+//integrationTest.mustRunAfter test
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/testInt/java')
+        }
+        resources.srcDir 'src/testInt/resources'
     }
 }

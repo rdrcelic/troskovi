@@ -8,7 +8,7 @@ spring:
     hibernate:
       ddl-auto: create
   datasource:
-    url: ${vcap.services.test-db.credentials.jdbcUrl} #jdbc:mysql://localhost:3306/db_troskovi?createDatabaseIfNotExist=true
+    url: ${vcap.services.test-db.credentials.jdbcUrl}
     username: ${vcap.services.test-db.credentials.username}
     password: ${vcap.services.test-db.credentials.password}
     driver-class-name: com.mysql.jdbc.Driver
