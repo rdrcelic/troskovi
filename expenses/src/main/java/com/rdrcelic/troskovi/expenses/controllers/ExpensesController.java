@@ -5,6 +5,7 @@ import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,11 @@ public class ExpensesController {
         ModelMapper modelMapper = new ModelMapper();
         ExpenseDto returnExpenseDto = modelMapper.map(newExpenseEntity, ExpenseDto.class);
         TroskoviResult troskoviResult = TroskoviResult.createResult("newExpense", returnExpenseDto);
-        return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON_UTF8).body(troskoviResult);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header(HttpHeaders.LOCATION, String.format("/expenses/%d", newExpenseEntity.getId()))
+                .body(troskoviResult);
     }
 
     @PatchMapping(value = "/{id}", consumes = "application/json; charset=UTF-8")

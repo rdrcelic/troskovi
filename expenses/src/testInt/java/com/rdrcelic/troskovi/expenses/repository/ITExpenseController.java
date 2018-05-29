@@ -1,4 +1,4 @@
-package com.rdrcelic.troskovi.expenses.controllers;
+package com.rdrcelic.troskovi.expenses.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
@@ -27,9 +27,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// TODO: this class should be renamed and prefixed with IT to comply to integration test naming convention
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ExpenseControllerIntegrationTest {
+public class ITExpenseController {
 
     @Autowired
     private TestRestTemplate restTemplate;

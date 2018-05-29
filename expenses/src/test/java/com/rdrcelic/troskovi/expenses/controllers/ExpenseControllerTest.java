@@ -8,6 +8,7 @@ import com.rdrcelic.troskovi.expenses.exceptions.ExpenseConflictExeption;
 import com.rdrcelic.troskovi.expenses.exceptions.NoSuchExpense;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
+import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -86,6 +88,8 @@ public class ExpenseControllerTest {
         // then
         this.mockMvc.perform(builder).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.LOCATION))
+                .andExpect(MockMvcResultMatchers.header().string(HttpHeaders.LOCATION, StringContains.containsString(String.format("/expenses/%d", newExpense.getId()))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]").isMap())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].newExpense").exists())
