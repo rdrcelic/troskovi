@@ -1,0 +1,21 @@
+#debug: true
+#trace: true
+
+logging:
+  level:
+    com.rdrcelic.troskovi.expenses: DEBUG
+    org.springframework.data: DEBUG
+    com.zaxxer.hikari: DEBUG
+
+
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+    hibernate:
+      ddl-auto: create
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
