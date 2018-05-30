@@ -24,10 +24,6 @@ import static org.mockito.Mockito.when;
 @EnableAspectJAutoProxy
 @Import(ControllerLoggingAspect.class)
 public class ControllerLoggingAspectTest {
-    // initialize mocks properly and enable automatic Mockito framework validation
-    // do the same as @RunWith(MockitoJUnitRunner.class) which couldn't be applied here due to @WebMvcTest
-//    @Rule
-//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Autowired
     private MockMvc mockMvc;

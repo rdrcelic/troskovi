@@ -38,10 +38,6 @@ import static org.mockito.Mockito.*;
 //@RunWith(SpringRunner.class)
 @WebMvcTest(value = ExpensesController.class, secure = false)
 public class ExpenseControllerTest {
-    // initialize mocks properly and enable automatic Mockito framework validation
-    // do the same as @RunWith(MockitoJUnitRunner.class) which couldn't be applied here due to @WebMvcTest
-//    @Rule
-//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Autowired
     private MockMvc mockMvc;

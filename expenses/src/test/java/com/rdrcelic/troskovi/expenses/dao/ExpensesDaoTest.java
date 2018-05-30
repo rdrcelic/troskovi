@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -51,11 +52,16 @@ public class ExpensesDaoTest {
     @Test
     public void getAllExpenses() {
         // given
-        when(expensesRepository.findAll()).thenReturn(Arrays.asList(enhancedRandom.nextObject(ExpenseEntity.class)));
+        ExpenseEntity entity1 = new ExpenseEntity(1L, "foo", BigDecimal.valueOf(10.01), true);
+        ExpenseEntity entity2 = new ExpenseEntity(2L, "bar", BigDecimal.valueOf(10.02), true);
+        when(expensesRepository.findAll()).thenReturn(Arrays.asList(entity1, entity2));
         // when
         List<ExpenseDto> expenseDtoList = expensesDao.getAllExpenses();
         // then
-        assertThat(expenseDtoList).hasSize(1);
+        assertThat(expenseDtoList).hasSize(2);
+        assertThat(expenseDtoList).
+                extracting("description", "amount").
+                containsExactly(tuple("foo", BigDecimal.valueOf(10.01)), tuple("bar", BigDecimal.valueOf(10.02)));
     }
 
     @Test
