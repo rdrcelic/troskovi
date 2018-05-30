@@ -6,21 +6,19 @@ import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import com.rdrcelic.troskovi.expenses.exceptions.ExpenseConflictExeption;
 import com.rdrcelic.troskovi.expenses.exceptions.NoSuchExpense;
+import com.rdrcelic.troskovi.expenses.extensions.MockitoExtension;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.hamcrest.core.StringContains;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,13 +34,14 @@ import static org.mockito.Mockito.*;
 /**
  * This is component integration test for MVC ExpenseController
  */
-@RunWith(SpringRunner.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+//@RunWith(SpringRunner.class)
 @WebMvcTest(value = ExpensesController.class, secure = false)
 public class ExpenseControllerTest {
     // initialize mocks properly and enable automatic Mockito framework validation
     // do the same as @RunWith(MockitoJUnitRunner.class) which couldn't be applied here due to @WebMvcTest
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+//    @Rule
+//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +54,7 @@ public class ExpenseControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
     }

@@ -3,14 +3,16 @@ package com.rdrcelic.troskovi.expenses.dao;
 import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import com.rdrcelic.troskovi.expenses.exceptions.NoSuchExpense;
+import com.rdrcelic.troskovi.expenses.extensions.MockitoExtension;
 import com.rdrcelic.troskovi.expenses.repository.ExpensesRepository;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
@@ -20,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -28,7 +31,8 @@ import static org.mockito.Mockito.*;
 /**
  * This is unit test for ExpenseDao
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitPlatform.class)
+@ExtendWith(MockitoExtension.class)
 public class ExpensesDaoTest {
 
     private EnhancedRandom enhancedRandom;
@@ -38,7 +42,7 @@ public class ExpensesDaoTest {
 
     private ExpensesDao expensesDao;
 
-    @Before
+    @BeforeEach
     public void setup() {
         enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
         expensesDao = new ExpensesDao(expensesRepository);
@@ -64,8 +68,9 @@ public class ExpensesDaoTest {
         // when
         ExpenseEntity createdExpenseEntity = expensesDao.createExpense(newExpenseDto);
         // then
-        assertThat(createdExpenseEntity.getActive()).isTrue();
-        assertThat(createdExpenseEntity).isEqualTo(newExpenseEntity);
+        assertAll(
+                () -> assertThat(createdExpenseEntity.getActive()).isTrue(),
+                () -> assertThat(createdExpenseEntity).isEqualTo(newExpenseEntity));
     }
 
     @Test
@@ -103,10 +108,11 @@ public class ExpensesDaoTest {
         expensesDao.patchExpense(101L, changeInExpense);
         // then
         verify(expensesRepository, times(1)).save(any(ExpenseEntity.class));
-        // make sure only amount has been changed
-        assertThat(expenseChanged.getAmount()).isEqualTo(BigDecimal.ONE);
-        // and all other fields stayed the same
-        assertThat(expenseChanged.getActive()).isTrue();
-        assertThat(expenseChanged.getDescription()).isEqualTo("foo");
+        assertAll(
+                // make sure only amount has been changed
+                () -> assertThat(expenseChanged.getAmount()).isEqualTo(BigDecimal.ONE),
+                // and all other fields stayed the same
+                () -> assertThat(expenseChanged.getActive()).isTrue(),
+                () -> assertThat(expenseChanged.getDescription()).isEqualTo("foo"));
     }
 }

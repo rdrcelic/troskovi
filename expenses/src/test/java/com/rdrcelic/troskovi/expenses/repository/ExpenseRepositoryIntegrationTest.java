@@ -4,21 +4,21 @@ import com.rdrcelic.troskovi.expenses.entities.ExpenseEntity;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.assertj.core.api.Condition;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This is component integration test for ExpenseRepository
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class ExpenseRepositoryIntegrationTest {
 
@@ -31,12 +31,12 @@ public class ExpenseRepositoryIntegrationTest {
     private EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
     private ExpenseEntity randomEntity;
 
-    @After
+    @AfterEach
     public void cleaup() {
         entityManager.clear();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         randomEntity = enhancedRandom.nextObject(ExpenseEntity.class);
         randomEntity.setId(null); // has to be done to avoid "org.hibernate.PersistentObjectException: detached entity passed to persist"

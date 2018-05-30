@@ -3,14 +3,14 @@ package com.rdrcelic.troskovi.expenses.jackson;
 import com.rdrcelic.troskovi.expenses.dto.ExpenseDto;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * This is component test to make sure Jackson updates doesn't break JSON format expectations
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @JsonTest
 public class JacksonExpenseDtoCompatibilityTest {
 
@@ -30,7 +30,7 @@ public class JacksonExpenseDtoCompatibilityTest {
     @Autowired
     private JacksonTester<ExpenseDto> jsonTester;
 
-    @Before
+    @BeforeEach
     public void setup() {
         enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
     }

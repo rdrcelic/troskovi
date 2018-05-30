@@ -2,18 +2,16 @@ package com.rdrcelic.troskovi.expenses.logging;
 
 import com.rdrcelic.troskovi.expenses.controllers.ExpensesController;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import com.rdrcelic.troskovi.expenses.extensions.MockitoExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,15 +19,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest(controllers = ExpensesController.class, secure = false)
 @EnableAspectJAutoProxy
 @Import(ControllerLoggingAspect.class)
 public class ControllerLoggingAspectTest {
     // initialize mocks properly and enable automatic Mockito framework validation
     // do the same as @RunWith(MockitoJUnitRunner.class) which couldn't be applied here due to @WebMvcTest
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+//    @Rule
+//    public MockitoRule rule = MockitoJUnit.rule();
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +35,7 @@ public class ControllerLoggingAspectTest {
     @MockBean
     private ExpensesDao expensesDao;
 
-    @After
+    @AfterEach
     public void cleanup() {
         TestLogAppender.clearEvents();
     }

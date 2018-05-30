@@ -1,4 +1,4 @@
-package com.rdrcelic.troskovi.expenses.repository;
+package com.rdrcelic.troskovi.expenses.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rdrcelic.troskovi.expenses.dao.ExpensesDao;
@@ -8,9 +8,9 @@ import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
 import com.rdrcelic.troskovi.expenses.utility.ResultConverter;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -18,7 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 // TODO: this class should be renamed and prefixed with IT to comply to integration test naming convention
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ITExpenseController {
 
@@ -44,7 +44,7 @@ public class ITExpenseController {
     }
     private ExpenseDto testExpenseDto;
 
-    @Before
+    @BeforeEach
     public void setup() {
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
         testExpenseDto = enhancedRandom.nextObject(ExpenseDto.class);
