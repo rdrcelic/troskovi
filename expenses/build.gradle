@@ -62,9 +62,6 @@ testSets {
     integrationTest
 }
 
-//check.dependsOn integrationTest
-//integrationTest.mustRunAfter test
-
 sourceSets {
     integrationTest {
         java {
