@@ -8,9 +8,9 @@ import com.rdrcelic.troskovi.expenses.model.TroskoviResult;
 import com.rdrcelic.troskovi.expenses.utility.ResultConverter;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -18,7 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ITExpenseController {
 
@@ -43,7 +43,7 @@ public class ITExpenseController {
     }
     private ExpenseDto testExpenseDto;
 
-    @BeforeEach
+    @Before
     public void setup() {
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandom();
         testExpenseDto = enhancedRandom.nextObject(ExpenseDto.class);
